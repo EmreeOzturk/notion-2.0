@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['miro.medium.com',"www.liblogo.com"],
+    domains: ['miro.medium.com',"www.liblogo.com","cdn.sanity.io"],
   },
 }
 

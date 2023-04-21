@@ -1,12 +1,12 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
 import Header from "@/components/header/Header";
 import Hero from "@/components/main/Hero";
+import { client } from "@/sanity";
+import { Post } from "@/typings";
+import PostCard from "@/components/main/posts/PostCard";
 
-
-const inter = Inter({ subsets: ["latin"] });
-
-export default function Home() {
+export default function Home({ posts: posts }: { posts: Post[] }) {
+  console.log(posts);
   return (
     <>
       <Head>
@@ -16,6 +16,34 @@ export default function Home() {
       </Head>
       <Header />
       <Hero />
+      {/* posts */}
+      <div className="flex items-center flex-wrap justify-center max-w-7xl mx-auto py-12">
+        {posts.map((post) => (
+            <PostCard key={post._id} post={post} />
+        ))}
+      </div>
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  const query = `
+  *[_type == "post"]{
+    _id,
+    title,
+    author-> {
+      name,
+      image
+    },
+    description,
+    slug,
+    mainImage
+  }`;
+
+  const posts = await client.fetch(query);
+  return {
+    props: {
+      posts,
+    },
+  };
+};
